@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="description" content="Intrinsic 4D Gaussian Segmentation from Scene Cues">
+  <meta name="keywords" content="Gaussian Splatting, 4D Segmentation, Scene Cues, Affinity Graph, Computer Vision">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  <title>Intrinsic 4D Gaussian Segmentation from Scene Cues</title>
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro" rel="stylesheet">
+
+  <!-- Bulma and other CSS -->
+  <link rel="stylesheet" href="./static/css/bulma.min.css">
+  <link rel="stylesheet" href="./static/css/bulma-carousel.min.css">
+  <link rel="stylesheet" href="./static/css/bulma-slider.min.css">
+  <link rel="stylesheet" href="./static/css/fontawesome.all.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+  <link rel="stylesheet" href="./static/css/index.css">
+  <link rel="icon"
+    href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🪄</text></svg>">
+
+  <!-- jQuery & JS -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script defer src="./static/js/fontawesome.all.min.js"></script>
+  <script src="./static/js/bulma-carousel.min.js"></script>
+  <script src="./static/js/bulma-slider.min.js"></script>
+  <script src="./static/js/index.js"></script>
+</head>
+
+<body>
+
+  <!-- ─── Title / Authors / Links ─── -->
+  <section class="hero">
+    <div class="hero-body">
+      <div class="container is-max-desktop">
+        <div class="columns is-centered">
+          <div class="column has-text-centered">
+            <h1 class="title is-1 publication-title">Intrinsic 4D Gaussian Segmentation from Scene Cues</h1>
+            <div class="is-size-5 publication-authors">
+              <span class="author-block">
+                <a href="#">Hasan Yazar</a><sup>*</sup>,</span>
+              <span class="author-block">
+                <a href="#">Mohamed Rayan Barhdadi</a><sup>*</sup>,</span>
+              <span class="author-block">
+                <a href="#">Erchin Serpedin</a>,</span>
+              <span class="author-block">
+                <a href="#">Mehmet Tuncel</a>,</span>
+              <span class="author-block">
+                <a href="#">Hasan Kurban</a></span>
+            </div>
+
+            <div class="is-size-5 publication-authors">
+              <span class="author-block">Preprint</span>
+            </div>
+            <div class="is-size-6 publication-authors">
+              <span class="author-block"><sup>*</sup>Equal contribution.</span>
+            </div>
+
+            <div class="column has-text-centered">
+              <div class="publication-links">
+                <!-- PDF / Paper link -->
+                <span class="link-block">
+                  <a href="#" class="external-link button is-normal is-rounded is-dark">
+                    <span class="icon"><i class="fas fa-file-pdf"></i></span>
+                    <span>Paper</span>
+                  </a>
+                </span>
+                <!-- arXiv link (add when available) -->
+                <span class="link-block">
+                  <a href="#" class="external-link button is-normal is-rounded is-dark">
+                    <span class="icon"><i class="ai ai-arxiv"></i></span>
+                    <span>arXiv</span>
+                  </a>
+                </span>
+                <!-- Code link -->
+                <span class="link-block">
+                  <a href="https://github.com/KurbanIntelligenceLab/intrinsic-gs"
+                    class="external-link button is-normal is-rounded is-dark">
+                    <span class="icon"><i class="fab fa-github"></i></span>
+                    <span>Code</span>
+                  </a>
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── Teaser ─── -->
+  <section class="hero teaser">
+    <div class="container is-max-desktop">
+      <div class="hero-body">
+        <img src="./static/images/teaser.png" alt="Intrinsic-GS segmentation on Neu3D and HyperNeRF, with no masks and no training">
+        <h2 class="subtitle has-text-centered">
+          <span class="dnerf">Intrinsic-GS</span> recovers object-level structure directly from the Gaussians,
+          without any 2D masks or foundation models.
+        </h2>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── Abstract ─── -->
+  <section class="section">
+    <div class="container is-max-desktop">
+      <div class="columns is-centered has-text-centered">
+        <div class="column is-four-fifths">
+          <h2 class="title is-3">Abstract</h2>
+          <div class="content has-text-justified">
+            <p>
+              Dynamic 4D Gaussian Splatting reconstructs deforming scenes with high fidelity and is increasingly
+              adopted as a representation for dynamic 3D scenes. Putting such a scene to use, for editing,
+              manipulation or motion analysis, first requires segmenting it: grouping the Gaussian primitives into
+              coherent objects. Current pipelines obtain this grouping by importing 2D masks from foundation models
+              such as SAM and lifting or distilling them into the Gaussian representation. In dynamic scenes these
+              masks must be generated across many frames and views, which is costly, and the resulting segmentation
+              can depend strongly on the quality and consistency of those external masks.
+            </p>
+            <p>
+              We ask how much object-level structure can instead be recovered from the Gaussians themselves, and
+              propose <span class="dnerf">Intrinsic-GS</span>, a training-free, mask-free method that builds a sparse
+              affinity graph over Gaussian primitives from appearance, orientation, scale, deformation-trajectory and
+              non-learned rendered-boundary cues. The graph is partitioned with Leiden community detection, requiring
+              no foundation model and no learned feature field.
+            </p>
+            <p>
+              On the standard 4D Gaussian segmentation benchmarks, Neu3D and HyperNeRF, Intrinsic-GS recovers
+              substantial object structure without mask supervision, reaching 0.746 mIoU on Neu3D and 0.575 on
+              HyperNeRF; on Neu3D, a geometry-only variant reaches 0.902 mIoU, matching SAM-supervised TRASE. On
+              HyperNeRF, Intrinsic-GS runs 12.5&times; faster than the mask-generation and feature-rendering stages
+              used by mask-supervised pipelines. These results suggest that much of the segmentation signal is already
+              encoded in the Gaussians themselves, offering a fast, mask-free direction for 3D and 4D Gaussian
+              segmentation that may also point toward more generalizable, robust segmentation in settings where
+              external masks are unreliable or expensive.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── Method ─── -->
+  <section class="section">
+    <div class="container is-max-desktop">
+      <div class="columns is-centered has-text-centered">
+        <div class="column is-full">
+          <h2 class="title is-3">Method</h2>
+          <img src="./static/images/pipeline.png" alt="Intrinsic-GS pipeline">
+          <div class="content has-text-justified" style="margin-top: 1.5rem;">
+            <p>
+              Starting from a frozen 4D Gaussian Splatting reconstruction, we build a sparse affinity graph over the
+              active Gaussians. Edge weights fuse geometric cues (<i>A</i><sub>geo</sub>: color, orientation, scale),
+              motion cues (<i>A</i><sub>motion</sub>: trajectory and rotation) and a non-learned rendered-boundary term
+              (<i>B</i><sub>bnd</sub>). The graph is partitioned with Leiden community detection, followed by a
+              long-range refinement step that merges clusters with high covisibility &mdash; with no SAM, no DEVA,
+              no DINO and no learned edge in the default configuration.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── Video ─── -->
+  <!-- TODO: add our own result video here (do NOT reuse TRASE viewer footage) -->
+
+  <!-- ─── Results ─── -->
+  <section class="section">
+    <div class="container is-max-desktop">
+      <div class="columns is-centered has-text-centered">
+        <div class="column is-four-fifths">
+          <h2 class="title is-3">Results</h2>
+          <div class="content has-text-justified">
+            <p>
+              Without any mask supervision, Intrinsic-GS recovers substantial object structure on the standard 4D
+              Gaussian segmentation benchmarks. A geometry-only variant matches the SAM-supervised baseline (TRASE) on
+              Neu3D, while running an order of magnitude faster than mask-based pipelines.
+            </p>
+          </div>
+          <div class="table-container">
+            <table class="table is-bordered is-striped is-narrow is-hoverable is-fullwidth">
+              <thead>
+                <tr>
+                  <th>Method</th>
+                  <th>Mask supervision</th>
+                  <th>Neu3D (mIoU)</th>
+                  <th>HyperNeRF (mIoU)</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>TRASE (SAM-supervised)</td>
+                  <td>Yes</td>
+                  <td>0.902</td>
+                  <td>&mdash;</td>
+                </tr>
+                <tr>
+                  <td><span class="dnerf">Intrinsic-GS</span></td>
+                  <td>No</td>
+                  <td>0.746</td>
+                  <td>0.575</td>
+                </tr>
+                <tr>
+                  <td><span class="dnerf">Intrinsic-GS</span> (geometry-only)</td>
+                  <td>No</td>
+                  <td>0.902</td>
+                  <td>&mdash;</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="content has-text-centered">
+            <p class="is-size-6 has-text-grey">
+              On HyperNeRF, Intrinsic-GS runs <strong>12.5&times; faster</strong> than the mask-generation and
+              feature-rendering stages used by mask-supervised pipelines.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── Qualitative Comparison ─── -->
+  <section class="section">
+    <div class="container is-max-desktop">
+      <div class="columns is-centered has-text-centered">
+        <div class="column is-full">
+          <h2 class="title is-3">Qualitative Comparison</h2>
+          <img src="./static/images/qualitative.png"
+            alt="Qualitative comparison of Intrinsic-GS against TRASE on several scenes">
+          <div class="content has-text-justified" style="margin-top: 1.5rem;">
+            <p>
+              Without any mask supervision, <span class="dnerf">Intrinsic-GS</span> recovers objects that are
+              comparable to, and in several cases cleaner than, the SAM-supervised TRASE baseline.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── Modality Ablation ─── -->
+  <section class="section">
+    <div class="container is-max-desktop">
+      <div class="columns is-centered has-text-centered">
+        <div class="column is-full">
+          <h2 class="title is-3">Cue Ablation</h2>
+          <img src="./static/images/modality_ablation.png"
+            alt="Effect of different intrinsic cues on the resulting segmentation">
+          <div class="content has-text-justified" style="margin-top: 1.5rem;">
+            <p>
+              The rendered Sobel-boundary cue and the full set of intrinsic cues (<em>Default all</em>) yield sharper
+              object boundaries than a geometry-only variant (<em>Geo only</em>), illustrating how each cue
+              contributes to the final partition.
+            </p>
+          </div>
+          <p class="is-size-7 has-text-grey" style="margin-top: 1rem;">
+            Additional qualitative results on Neu3D
+            (<a href="./static/images/neu3d-cut-roasted-beef.png">cut-roasted-beef</a>) and HyperNeRF
+            (<a href="./static/images/hypernerf-americano.png">americano</a>).
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── BibTeX ─── -->
+  <section class="section" id="BibTeX">
+    <div class="container is-max-desktop content">
+      <h2 class="title">BibTeX</h2>
+      <pre><code>@article{yazar2026intrinsicgs,
+  title     = {Intrinsic 4D Gaussian Segmentation from Scene Cues},
+  author    = {Yazar, Hasan and Barhdadi, Mohamed Rayan and Serpedin, Erchin and Tuncel, Mehmet and Kurban, Hasan},
+  booktitle = {Preprint},
+  year      = {2026}
+}</code></pre>
+    </div>
+  </section>
+
+  <!-- ─── Footer ─── -->
+  <footer class="footer">
+    <div class="container">
+      <div class="columns is-centered">
+        <div class="column is-8">
+          <div class="content has-text-centered">
+            <p>
+              This website is built on the
+              <a href="https://github.com/nerfies/nerfies.github.io">Nerfies</a> project page template.
+              The source code is released under a
+              <a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a> license.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+</body>
+
+</html>
