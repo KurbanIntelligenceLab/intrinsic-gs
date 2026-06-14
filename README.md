@@ -113,10 +113,9 @@ scripts, and compact report artifacts under `docs/` are tracked.
 
 ```bibtex
 @article{yazar2026intrinsicgs,
-    title     = {Intrinsic 4D Gaussian Segmentation from Scene Cues},
-    author    = {Yazar, Hasan and Barhdadi, Mohamed Rayan and Serpedin, Erchin and Tuncel, Mehmet and Kurban, Hasan},
-    booktitle = {Preprint},
-    year      = {2026}
+    title  = {Intrinsic 4D Gaussian Segmentation from Scene Cues},
+    author = {Yazar, Hasan and Barhdadi, Mohamed Rayan and Serpedin, Erchin and Tuncel, Mehmet and Kurban, Hasan},
+    year   = {2026}
 }
 ```
 
