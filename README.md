@@ -13,7 +13,7 @@ Preprint
 > checkpoints, large render outputs, and benchmark result dumps are not
 > committed; see [Generated artifacts](#generated-artifacts).
 
-![teaser](assets/teaser.jpg)
+<!-- TODO: add our own teaser figure (do NOT reuse TRASE assets) -->
 
 ## Overview
 
