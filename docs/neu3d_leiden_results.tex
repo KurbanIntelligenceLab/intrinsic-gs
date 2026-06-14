@@ -1,0 +1,122 @@
+\documentclass[10pt]{article}
+\usepackage[margin=0.7in]{geometry}
+\usepackage{booktabs,longtable,array}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0.45em}
+\renewcommand{\arraystretch}{1.08}
+
+\begin{document}
+\title{Neu3D Leiden Results and Ablations}
+\author{Generated from repository result artifacts}
+\date{May 29, 2026}
+\maketitle
+
+\section{Neu3D Leiden Benchmark}
+This table reports the normal Neu3D paper-benchmark Leiden run and its greedy cluster-union diagnostic counterpart.  Component ablations are reported separately below.
+
+\small
+\begin{longtable}{lrrrrr}
+\toprule
+Scene & Normal selected clusters & Greedy selected clusters & Normal mIoU & Greedy/union mIoU & Delta \\
+\midrule
+\endfirsthead
+\toprule
+Scene & Normal selected clusters & Greedy selected clusters & Normal mIoU & Greedy/union mIoU & Delta \\
+\midrule
+\endhead
+coffee\_martini & [4] & [4] & 0.9018 & 0.9018 & 0.0000 \\
+cook\_spinach & [5] & [5, 46] & 0.7281 & 0.7311 & 0.0030 \\
+cut\_roasted\_beef & [8] & [8] & 0.9093 & 0.9093 & 0.0000 \\
+flame\_steak & [3] & [3] & 0.6881 & 0.6881 & 0.0000 \\
+sear\_steak & [5] & [5] & 0.6888 & 0.6888 & 0.0000 \\
+\midrule
+\textbf{Mean} & -- & -- & \textbf{0.7832} & \textbf{0.7838} & \textbf{0.0006} \\
+\bottomrule
+\end{longtable}
+\normalsize
+
+\section{Interpretation}
+The greedy/union score is nearly identical to the normal single-cluster score because the greedy procedure selects the same single cluster on four of the five scenes.  Only \texttt{cook\_spinach} adds a second cluster, improving mIoU by 0.0030.
+
+\section{Neu3D Component Ablation Summary}
+\small
+\begin{longtable}{lrrrr}
+\toprule
+Variant & Scenes & Normal mean mIoU & Greedy/union mean mIoU & Delta \\
+\midrule
+\endfirsthead
+\toprule
+Variant & Scenes & Normal mean mIoU & Greedy/union mean mIoU & Delta \\
+\midrule
+\endhead
+default & 5 & 0.7450 & 0.7456 & 0.0006 \\
+no\_geo & 5 & 0.7076 & 0.7121 & 0.0045 \\
+no\_motion & 5 & 0.8821 & 0.9129 & 0.0308 \\
+no\_boundary & 5 & 0.5074 & 0.5080 & 0.0006 \\
+no\_motion\_no\_boundary & 5 & 0.9003 & 0.9011 & 0.0008 \\
+\bottomrule
+\end{longtable}
+\normalsize
+
+\section{Neu3D Component Ablation Per Scene}
+\small
+\begin{longtable}{llrrr}
+\toprule
+Variant & Scene & Normal mIoU & Greedy/union mIoU & Delta \\
+\midrule
+\endfirsthead
+\toprule
+Variant & Scene & Normal mIoU & Greedy/union mIoU & Delta \\
+\midrule
+\endhead
+default & coffee\_martini & 0.9017 & 0.9017 & 0.0000 \\
+default & cook\_spinach & 0.7263 & 0.7293 & 0.0030 \\
+default & cut\_roasted\_beef & 0.8081 & 0.8081 & 0.0000 \\
+default & flame\_steak & 0.6008 & 0.6008 & 0.0000 \\
+default & sear\_steak & 0.6882 & 0.6882 & 0.0000 \\
+no\_geo & coffee\_martini & 0.7664 & 0.7664 & 0.0000 \\
+no\_geo & cook\_spinach & 0.8037 & 0.8070 & 0.0033 \\
+no\_geo & cut\_roasted\_beef & 0.6737 & 0.6926 & 0.0189 \\
+no\_geo & flame\_steak & 0.6631 & 0.6631 & 0.0000 \\
+no\_geo & sear\_steak & 0.6312 & 0.6312 & 0.0000 \\
+no\_motion & coffee\_martini & 0.7666 & 0.8919 & 0.1253 \\
+no\_motion & cook\_spinach & 0.9406 & 0.9445 & 0.0039 \\
+no\_motion & cut\_roasted\_beef & 0.8840 & 0.9087 & 0.0247 \\
+no\_motion & flame\_steak & 0.9109 & 0.9109 & 0.0000 \\
+no\_motion & sear\_steak & 0.9085 & 0.9085 & 0.0000 \\
+no\_boundary & coffee\_martini & 0.8992 & 0.8992 & 0.0000 \\
+no\_boundary & cook\_spinach & 0.7299 & 0.7329 & 0.0030 \\
+no\_boundary & cut\_roasted\_beef & 0.7360 & 0.7360 & 0.0000 \\
+no\_boundary & flame\_steak & 0.0881 & 0.0881 & 0.0000 \\
+no\_boundary & sear\_steak & 0.0839 & 0.0839 & 0.0000 \\
+no\_motion\_no\_boundary & coffee\_martini & 0.9005 & 0.9005 & 0.0000 \\
+no\_motion\_no\_boundary & cook\_spinach & 0.8959 & 0.8996 & 0.0037 \\
+no\_motion\_no\_boundary & cut\_roasted\_beef & 0.8978 & 0.8978 & 0.0000 \\
+no\_motion\_no\_boundary & flame\_steak & 0.8920 & 0.8920 & 0.0000 \\
+no\_motion\_no\_boundary & sear\_steak & 0.9153 & 0.9153 & 0.0000 \\
+\bottomrule
+\end{longtable}
+\normalsize
+
+\section{Source Artifacts}
+\small
+\begin{longtable}{p{15cm}}
+\toprule
+Source file or pattern \\
+\midrule
+\endfirsthead
+\toprule
+Source file or pattern \\
+\midrule
+\endhead
+paper\_benchmark\_runs/neu3d/leiden/*/miou\_results.json \\
+paper\_benchmark\_runs/neu3d/leiden/*/miou\_results\_greedy.json \\
+output/final\_neu3d\_component\_ablations/component\_ablation\_summary.csv \\
+output/final\_neu3d\_component\_ablations/component\_ablation\_per\_scene.csv \\
+\bottomrule
+\end{longtable}
+\normalsize
+
+\end{document}

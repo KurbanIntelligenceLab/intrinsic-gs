@@ -1,0 +1,14 @@
+{
+  "scene": "slice-banana",
+  "prompt": "banana + banana slicer + hand + cutting board + towel",
+  "rgb_dir": "data/HyperNeRF/interp/slice-banana/rgb/2x",
+  "frames": 330,
+  "output_frames": 330,
+  "mean_masks_per_frame": 8.23030303030303,
+  "max_masks_per_frame": 11,
+  "start_session_sec": 17.953952750998724,
+  "close_session_sec": 0.14749792499787873,
+  "save_aggregate_sec": 7.004030999996758,
+  "total_sec": 172.38016556300136,
+  "prompt_count": 5
+}

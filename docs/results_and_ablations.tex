@@ -1,0 +1,996 @@
+\documentclass[10pt]{article}
+\usepackage[margin=0.7in]{geometry}
+\usepackage{booktabs,longtable,array,hyperref}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0.45em}
+\renewcommand{\arraystretch}{1.08}
+\begin{document}
+\title{4D Segmentation Results and Ablations}
+\author{Generated from repository result artifacts}
+\date{May 29, 2026}
+\maketitle
+\tableofcontents
+\newpage
+\section{Reading Guide}
+All main tables report normal single best-cluster mIoU only.  Multi-cluster proposal scores are isolated in Section~\ref{sec:proposal-ablation}; those tables are diagnostic ablations, not the basis for the headline results.
+Large per-object CSV sweeps are summarized by candidate or variant so every ablation family appears without dumping thousands of nearly identical rows.  Source files are listed at the end of the document.
+\section{Best Single-Cluster Results}
+\paragraph{Headline single-cluster mIoU numbers}
+\small
+\begin{longtable}{llrl}
+\toprule
+Dataset / convention & Best method or variant & Mean mIoU & Notes \\
+\midrule
+\endfirsthead
+\toprule
+Dataset / convention & Best method or variant & Mean mIoU & Notes \\
+\midrule
+\endhead
+HyperNeRF canonical final default & targeted\_default & 0.6154 & normal best cluster \\
+HyperNeRF paper benchmark bundle & pidinet\_leiden & 0.5661 & 8 JSON scenes present in checkout \\
+Neu3D component ablation & no\_motion\_no\_boundary & 0.9003 & best observed single-cluster Neu3D mIoU \\
+Neu3D paper benchmark bundle & leiden & 0.7832 & 5 JSON scenes present \\
+\bottomrule
+\end{longtable}
+\normalsize
+
+\section{HyperNeRF: Canonical Final Result}
+Canonical final package: \texttt{output/final\_hypernerf\_1}.  Method is Leiden resolution 0.03 with motion and boundary terms plus the targeted long-range preset where selected.  The headline final normal mean is 0.6154 mIoU.
+\paragraph{Canonical HyperNeRF per-scene result}
+\small
+\begin{longtable}{llrrrr}
+\toprule
+Scene & Variant & mIoU & Best k & Frames & K seen \\
+\midrule
+\endfirsthead
+\toprule
+Scene & Variant & mIoU & Best k & Frames & K seen \\
+\midrule
+\endhead
+chickchicken & baseline & 0.4491 & 4 & 97 & 20 \\
+cut-lemon1 & objectness\_lr\_best\_tau075 & 0.7207 & 1 & 399 & 11 \\
+hand1-dense-v2 & baseline & 0.9034 & 7 & 295 & 10 \\
+slice-banana & objectness\_lr\_slice\_best\_tau070 & 0.6510 & 5 & 51 & 7 \\
+torchocolate & baseline & 0.7039 & 24 & 174 & 34 \\
+americano & baseline & 0.3678 & 11 & 131 & 39 \\
+espresso & objectness\_longrange\_default & 0.3746 & 1 & 194 & 158 \\
+keyboard & objectness\_longrange\_default & 0.7569 & 3 & 156 & 20 \\
+oven-mitts & baseline & 0.5046 & 7 & 139 & 27 \\
+split-cookie & baseline & 0.7217 & 16 & 93 & 21 \\
+\bottomrule
+\end{longtable}
+\normalsize
+
+\paragraph{Targeted long-range default configuration}
+\small
+\begin{longtable}{lllrrrrrrrrr}
+\toprule
+Scene & Default variant & Tag & tau & traj min & vis corr max & max comp & max clusters & max area & top nbrs & obj w & vis w \\
+\midrule
+\endfirsthead
+\toprule
+Scene & Default variant & Tag & tau & traj min & vis corr max & max comp & max clusters & max area & top nbrs & obj w & vis w \\
+\midrule
+\endhead
+chickchicken & baseline &  & -- & -- & -- & -- & -- & -- &  & -- & -- \\
+cut-lemon1 & objectness\_longrange & objectness\_lr\_best\_tau075 & 0.7500 & 0.9950 & 0.4000 & 3.0000 & 3.0000 & 0.4500 & 4 & 0.0500 & 0.0000 \\
+hand1-dense-v2 & baseline &  & -- & -- & -- & -- & -- & -- &  & -- & -- \\
+slice-banana & objectness\_longrange & objectness\_lr\_slice\_best\_tau070 & 0.7000 & 0.9900 & 0.2500 & 6.0000 & 3.0000 & 0.5500 & 4 & 0.1500 & 0.1000 \\
+torchocolate & baseline &  & -- & -- & -- & -- & -- & -- &  & -- & -- \\
+americano & baseline &  & -- & -- & -- & -- & -- & -- &  & -- & -- \\
+espresso & objectness\_longrange & objectness\_longrange\_default & 0.7000 & 0.9950 & 0.2500 & 6.0000 & 5.0000 & 0.5500 & 8 & 0.1500 & 0.1000 \\
+keyboard & objectness\_longrange & objectness\_longrange\_default & 0.7000 & 0.9950 & 0.2500 & 6.0000 & 5.0000 & 0.5500 & 8 & 0.1500 & 0.1000 \\
+oven-mitts & baseline &  & -- & -- & -- & -- & -- & -- &  & -- & -- \\
+split-cookie & baseline &  & -- & -- & -- & -- & -- & -- &  & -- & -- \\
+\bottomrule
+\end{longtable}
+\normalsize
+
+\subsection{Default-Centered HyperNeRF Ablations}
+\paragraph{Method summary versus final default}
+\small
+\begin{longtable}{lrp{9cm}}
+\toprule
+Method & Mean mIoU & Notes \\
+\midrule
+\endfirsthead
+\toprule
+Method & Mean mIoU & Notes \\
+\midrule
+\endhead
+baseline\_res003 & 0.5418 & rendered baseline, no long-range \\
+global\_objectness\_longrange & 0.5746 & rendered one global long-range setting \\
+fast\_sweep\_global\_best & 0.5847 & image-space sweep estimate: tau0.75\_traj0.995\_vc0.4\_mc3\_mk3\_ma0.45\_tn4\_ow0.05\_vw0 \\
+targeted\_default & 0.6154 & rendered fixed per-scene default preset \\
+\bottomrule
+\end{longtable}
+\normalsize
+
+\paragraph{Per-scene contribution of targeted default}
+\small
+\begin{longtable}{lrrrrrl}
+\toprule
+Scene & Baseline & Global LR & Targeted & Delta vs base & Delta vs global & Targeted variant \\
+\midrule
+\endfirsthead
+\toprule
+Scene & Baseline & Global LR & Targeted & Delta vs base & Delta vs global & Targeted variant \\
+\midrule
+\endhead
+chickchicken & 0.4491 & 0.4491 & 0.4491 & 0.0000 & 0.0000 & baseline \\
+cut-lemon1 & 0.5749 & 0.5749 & 0.7207 & 0.1458 & 0.1458 & objectness\_lr\_best\_tau075 \\
+hand1-dense-v2 & 0.9034 & 0.9034 & 0.9034 & 0.0000 & 0.0000 & baseline \\
+slice-banana & 0.3968 & 0.3895 & 0.6510 & 0.2542 & 0.2615 & objectness\_lr\_slice\_best\_tau070 \\
+torchocolate & 0.7039 & 0.7039 & 0.7039 & 0.0000 & 0.0000 & baseline \\
+americano & 0.3678 & 0.3678 & 0.3678 & 0.0000 & 0.0000 & baseline \\
+espresso & 0.3267 & 0.3746 & 0.3746 & 0.0479 & 0.0000 & objectness\_longrange\_default \\
+keyboard & 0.4687 & 0.7569 & 0.7569 & 0.2882 & 0.0000 & objectness\_longrange\_default \\
+oven-mitts & 0.5046 & 0.5046 & 0.5046 & 0.0000 & 0.0000 & baseline \\
+split-cookie & 0.7217 & 0.7217 & 0.7217 & 0.0000 & 0.0000 & baseline \\
+\bottomrule
+\end{longtable}
+\normalsize
+
+\paragraph{Leave-one-in targeted override ablation}
+\small
+\begin{longtable}{llrrr}
+\toprule
+Scene & Variant & Scene delta & Mean if only this scene changed & Mean gain \\
+\midrule
+\endfirsthead
+\toprule
+Scene & Variant & Scene delta & Mean if only this scene changed & Mean gain \\
+\midrule
+\endhead
+keyboard & objectness\_longrange\_default & 0.2882 & 0.5706 & 0.0288 \\
+slice-banana & objectness\_lr\_slice\_best\_tau070 & 0.2542 & 0.5672 & 0.0254 \\
+cut-lemon1 & objectness\_lr\_best\_tau075 & 0.1458 & 0.5563 & 0.0146 \\
+espresso & objectness\_longrange\_default & 0.0479 & 0.5465 & 0.0048 \\
+chickchicken & baseline & 0.0000 & 0.5418 & 0.0000 \\
+hand1-dense-v2 & baseline & 0.0000 & 0.5418 & 0.0000 \\
+torchocolate & baseline & 0.0000 & 0.5418 & 0.0000 \\
+americano & baseline & 0.0000 & 0.5418 & 0.0000 \\
+oven-mitts & baseline & 0.0000 & 0.5418 & 0.0000 \\
+split-cookie & baseline & 0.0000 & 0.5418 & 0.0000 \\
+\bottomrule
+\end{longtable}
+\normalsize
+
+\paragraph{Leave-one-out targeted override ablation}
+\small
+\begin{longtable}{llrrr}
+\toprule
+Scene & Variant & Scene delta & Mean if reverted & Drop when removed \\
+\midrule
+\endfirsthead
+\toprule
+Scene & Variant & Scene delta & Mean if reverted & Drop when removed \\
+\midrule
+\endhead
+keyboard & objectness\_longrange\_default & 0.2882 & 0.5866 & 0.0288 \\
+slice-banana & objectness\_lr\_slice\_best\_tau070 & 0.2542 & 0.5899 & 0.0254 \\
+cut-lemon1 & objectness\_lr\_best\_tau075 & 0.1458 & 0.6008 & 0.0146 \\
+espresso & objectness\_longrange\_default & 0.0479 & 0.6106 & 0.0048 \\
+chickchicken & baseline & 0.0000 & 0.6154 & 0.0000 \\
+hand1-dense-v2 & baseline & 0.0000 & 0.6154 & 0.0000 \\
+torchocolate & baseline & 0.0000 & 0.6154 & 0.0000 \\
+americano & baseline & 0.0000 & 0.6154 & 0.0000 \\
+oven-mitts & baseline & 0.0000 & 0.6154 & 0.0000 \\
+split-cookie & baseline & 0.0000 & 0.6154 & 0.0000 \\
+\bottomrule
+\end{longtable}
+\normalsize
+
+\subsection{HyperNeRF Full 10 Baseline Before Targeted Overrides}
+\paragraph{Leiden res0.03 + motion + boundary on full 10 Mask-Benchmark}
+\small
+\begin{longtable}{llrrrl}
+\toprule
+Split & Scene & mIoU & Frames & K used & Selected cluster \\
+\midrule
+\endfirsthead
+\toprule
+Split & Scene & mIoU & Frames & K used & Selected cluster \\
+\midrule
+\endhead
+interp & chickchicken & 0.4501 & 97 & 22 & 4 \\
+interp & cut-lemon1 & 0.5626 & 399 & 13 & 2 \\
+interp & hand1-dense-v2 & 0.9027 & 295 & 15 & 7 \\
+interp & slice-banana & 0.3984 & 51 & 15 & 3 \\
+interp & torchocolate & 0.7000 & 174 & 35 & 24 \\
+misc & americano & 0.3371 & 131 & 39 & 11 \\
+misc & espresso & 0.3281 & 194 & 165 & 6 \\
+misc & keyboard & 0.4680 & 156 & 26 & 5 \\
+misc & oven-mitts & 0.4731 & 139 & 29 & 7 \\
+misc & split-cookie & 0.7244 & 93 & 21 & 16 \\
+\bottomrule
+\end{longtable}
+\normalsize
+
+\subsection{HyperNeRF Paper Benchmark Bundle}
+The current checkout contains per-scene JSONs for eight HyperNeRF paper-benchmark scenes in each method directory.  The parameter notes in \texttt{PARAMS.md} mention a ten-scene table, but the generated numbers below are computed only from the JSON files actually present in \texttt{paper\_benchmark\_runs/hypernerf}.
+\paragraph{HyperNeRF paper benchmark method means}
+\small
+\begin{longtable}{lrr}
+\toprule
+Method & Scenes & Mean mIoU \\
+\midrule
+\endfirsthead
+\toprule
+Method & Scenes & Mean mIoU \\
+\midrule
+\endhead
+baseline\_leiden & 8 & 0.5469 \\
+pidinet\_leiden & 8 & 0.5661 \\
+\bottomrule
+\end{longtable}
+\normalsize
+
+\paragraph{HyperNeRF paper benchmark per scene}
+\small
+\begin{longtable}{llr}
+\toprule
+Method & Scene & mIoU \\
+\midrule
+\endfirsthead
+\toprule
+Method & Scene & mIoU \\
+\midrule
+\endhead
+baseline\_leiden & cut-lemon1 & 0.3279 \\
+baseline\_leiden & espresso & 0.4741 \\
+baseline\_leiden & hand1-dense-v2 & 0.8794 \\
+baseline\_leiden & keyboard & 0.4880 \\
+baseline\_leiden & oven-mitts & 0.4921 \\
+baseline\_leiden & slice-banana & 0.2898 \\
+baseline\_leiden & split-cookie & 0.7387 \\
+baseline\_leiden & torchocolate & 0.6855 \\
+pidinet\_leiden & cut-lemon1 & 0.5474 \\
+pidinet\_leiden & espresso & 0.3940 \\
+pidinet\_leiden & hand1-dense-v2 & 0.8794 \\
+pidinet\_leiden & keyboard & 0.4859 \\
+pidinet\_leiden & oven-mitts & 0.5029 \\
+pidinet\_leiden & slice-banana & 0.2973 \\
+pidinet\_leiden & split-cookie & 0.7378 \\
+pidinet\_leiden & torchocolate & 0.6839 \\
+\bottomrule
+\end{longtable}
+\normalsize
+
+\subsection{HyperNeRF Parameter and Clusterer Sweeps}
+\paragraph{All HyperNeRF exploratory trials in improvement summary}
+\small
+\begin{longtable}{lllrr}
+\toprule
+Scene & Label & Group & K & mIoU \\
+\midrule
+\endfirsthead
+\toprule
+Scene & Label & Group & K & mIoU \\
+\midrule
+\endhead
+americano & americano\_k30 & probe & 30 & 0.0877 \\
+americano & kmeans & kmeans & 14 & 0.1239 \\
+americano & americano\_leiden003 & probe & 13 & 0.1015 \\
+americano & hdbscan & hdbscan & 16 & 0.1125 \\
+americano & leiden & leiden & 7 & 0.0777 \\
+chickchicken & hdbscan & hdbscan & 19 & 0.1381 \\
+chickchicken & kmeans & kmeans & 14 & 0.2017 \\
+chickchicken & leiden & leiden & 11 & 0.3007 \\
+cut-lemon1 & hdbscan & hdbscan & 20 & 0.1939 \\
+cut-lemon1 & kmeans & kmeans & 14 & 0.1983 \\
+cut-lemon1 & leiden & leiden & 6 & 0.3100 \\
+espresso & leiden & leiden & 22 & 0.2237 \\
+espresso & hdbscan & hdbscan & 21 & 0.2237 \\
+espresso & kmeans & kmeans & 14 & 0.2002 \\
+hand1-dense-v2 & hand1\_motion & probe & 14 & 0.2610 \\
+hand1-dense-v2 & kmeans & kmeans & 14 & 0.2612 \\
+hand1-dense-v2 & leiden & leiden & 12 & 0.2589 \\
+hand1-dense-v2 & hdbscan & hdbscan & 2 & 0.2582 \\
+keyboard & keyboard\_boundary & probe & 14 & 0.2444 \\
+keyboard & keyboard\_k30 & probe & 30 & 0.2110 \\
+keyboard & kmeans & kmeans & 14 & 0.2162 \\
+keyboard & leiden & leiden & 8 & 0.1969 \\
+keyboard & hdbscan & hdbscan & 2 & 0.1534 \\
+oven-mitts & kmeans & kmeans & 14 & 0.3091 \\
+oven-mitts & leiden & leiden & 20 & 0.3282 \\
+oven-mitts & hdbscan & hdbscan & 11 & 0.2706 \\
+slice-banana & hdbscan & hdbscan & 14 & 0.2281 \\
+slice-banana & slice\_hdb005 & probe & 31 & 0.1552 \\
+slice-banana & kmeans & kmeans & 14 & 0.1564 \\
+slice-banana & leiden & leiden & 7 & 0.2452 \\
+split-cookie & kmeans & kmeans & 14 & 0.1041 \\
+split-cookie & hdbscan & hdbscan & 12 & 0.1063 \\
+split-cookie & leiden & leiden & 12 & 0.1028 \\
+torchocolate & hdbscan & hdbscan & 14 & 0.1092 \\
+torchocolate & torchocolate\_k30 & probe & 30 & 0.1089 \\
+torchocolate & torchocolate\_hdb005 & probe & 47 & 0.0804 \\
+torchocolate & kmeans & kmeans & 14 & 0.1038 \\
+torchocolate & leiden & leiden & 21 & 0.0811 \\
+\bottomrule
+\end{longtable}
+\normalsize
+
+\paragraph{Best exploratory trial by scene}
+\small
+\begin{longtable}{lllrr}
+\toprule
+Scene & Best label & Group & K & mIoU \\
+\midrule
+\endfirsthead
+\toprule
+Scene & Best label & Group & K & mIoU \\
+\midrule
+\endhead
+americano & americano\_k30 & probe & 30 & 0.0877 \\
+chickchicken & hdbscan & hdbscan & 19 & 0.1381 \\
+cut-lemon1 & hdbscan & hdbscan & 20 & 0.1939 \\
+espresso & leiden & leiden & 22 & 0.2237 \\
+hand1-dense-v2 & hand1\_motion & probe & 14 & 0.2610 \\
+keyboard & keyboard\_boundary & probe & 14 & 0.2444 \\
+oven-mitts & kmeans & kmeans & 14 & 0.3091 \\
+slice-banana & hdbscan & hdbscan & 14 & 0.2281 \\
+split-cookie & kmeans & kmeans & 14 & 0.1041 \\
+torchocolate & hdbscan & hdbscan & 14 & 0.1092 \\
+\bottomrule
+\end{longtable}
+\normalsize
+
+\subsection{HyperNeRF Official-Mask Ablations}
+\paragraph{Official-mask method comparison}
+\small
+\begin{longtable}{lllrrrr}
+\toprule
+Method & Scene set & Mask set & Scenes & Targets & Mean target mIoU & Mean top/scene mIoU \\
+\midrule
+\endfirsthead
+\toprule
+Method & Scene set & Mask set & Scenes & Targets & Mean target mIoU & Mean top/scene mIoU \\
+\midrule
+\endhead
+our\_prev\_default\_leiden\_res0018\_motion\_boundary & official original six & official object masks & 6 & 66 & 0.3404 & 0.6771 \\
+our\_longrange\_merge\_tau085 & official original six & official object masks & 6 & 66 & 0.3415 & 0.6902 \\
+our\_new\_default\_leiden\_res003\_motion\_boundary & official original six & official object masks & 6 & 66 & 0.3686 & 0.7198 \\
+TRASE k30 & official original six & official object masks & 6 & 66 & 0.6995 & 0.9375 \\
+\bottomrule
+\end{longtable}
+\normalsize
+
+\paragraph{Method by mask matrix}
+\small
+\begin{longtable}{llrrrrl}
+\toprule
+Method & Mask set & Mean target mIoU & Mean top/scene mIoU & Scenes & Targets & Status \\
+\midrule
+\endfirsthead
+\toprule
+Method & Mask set & Mean target mIoU & Mean top/scene mIoU & Scenes & Targets & Status \\
+\midrule
+\endhead
+Our method & Official masks & -- & 0.6771 & 6 & 66 & computed \\
+TRASE & Official masks & -- & 0.9375 & 6 & 66 & computed \\
+\bottomrule
+\end{longtable}
+\normalsize
+
+\paragraph{No-mask candidate sweep, summarized by candidate}
+\small
+\begin{longtable}{lrrrr}
+\toprule
+Ablation & Scenes & Targets & Mean target mIoU & Mean top/scene mIoU \\
+\midrule
+\endfirsthead
+\toprule
+Ablation & Scenes & Targets & Mean target mIoU & Mean top/scene mIoU \\
+\midrule
+\endhead
+hdbscan\_0015 & 6 & 66 & 0.2845 & 0.5620 \\
+leiden\_base & 6 & 66 & 0.3544 & 0.6771 \\
+leiden\_motion & 6 & 66 & 0.3544 & 0.6771 \\
+spectral\_k14 & 6 & 66 & 0.2866 & 0.6244 \\
+\bottomrule
+\end{longtable}
+\normalsize
+
+\paragraph{No-mask map postprocess sweep, summarized by variant}
+\small
+\begin{longtable}{lrrrr}
+\toprule
+Ablation & Scenes & Targets & Mean target mIoU & Mean top/scene mIoU \\
+\midrule
+\endfirsthead
+\toprule
+Ablation & Scenes & Targets & Mean target mIoU & Mean top/scene mIoU \\
+\midrule
+\endhead
+area<0.1 & 6 & 66 & 0.2582 & 0.6112 \\
+area<0.2 & 6 & 66 & 0.3195 & 0.6220 \\
+area<0.35 & 6 & 66 & 0.3329 & 0.6220 \\
+base & 6 & 66 & 0.3544 & 0.6771 \\
+border<0.005 & 6 & 66 & 0.1905 & 0.4982 \\
+border<0.01 & 6 & 66 & 0.2765 & 0.5886 \\
+border<0.01+area<0.2 & 6 & 66 & 0.2415 & 0.4982 \\
+border<0.01+area<0.35 & 6 & 66 & 0.2548 & 0.5335 \\
+border<0.02 & 6 & 66 & 0.3499 & 0.6771 \\
+border<0.02+area<0.2 & 6 & 66 & 0.3149 & 0.6220 \\
+border<0.02+area<0.35 & 6 & 66 & 0.3283 & 0.6220 \\
+border<0.02+covis>0.85 & 6 & 66 & 0.3306 & 0.6771 \\
+border<0.02+covis>0.9 & 6 & 66 & 0.3415 & 0.6771 \\
+border<0.02+covis>0.95 & 6 & 66 & 0.3499 & 0.6771 \\
+border<0.05 & 6 & 66 & 0.3544 & 0.6771 \\
+border<0.05+area<0.2 & 6 & 66 & 0.3195 & 0.6220 \\
+border<0.05+area<0.35 & 6 & 66 & 0.3329 & 0.6220 \\
+covis>0.85 & 6 & 66 & 0.3349 & 0.6771 \\
+covis>0.9 & 6 & 66 & 0.3458 & 0.6771 \\
+covis>0.95 & 6 & 66 & 0.3543 & 0.6771 \\
+\bottomrule
+\end{longtable}
+\normalsize
+
+\paragraph{No-union comparison for official mask set}
+\small
+\begin{longtable}{lrr}
+\toprule
+Method & Mean target mIoU & Mean top/scene mIoU \\
+\midrule
+\endfirsthead
+\toprule
+Method & Mean target mIoU & Mean top/scene mIoU \\
+\midrule
+\endhead
+leiden\_motion\_base & 0.3404 & 0.6771 \\
+leiden\_motion\_longrange\_merge & 0.3415 & 0.6902 \\
+\bottomrule
+\end{longtable}
+\normalsize
+
+\paragraph{TRASE k30 official masks: best object per scene}
+\small
+\begin{longtable}{llrl}
+\toprule
+Scene & Best target/object & mIoU & Best k \\
+\midrule
+\endfirsthead
+\toprule
+Scene & Best target/object & mIoU & Best k \\
+\midrule
+\endhead
+americano & americano / table\_surface & 0.9149 & 8 \\
+chickchicken & chickchicken / cutting\_board & 0.9700 & 2 \\
+espresso & espresso / round\_coaster & 0.8174 & 17 \\
+keyboard & keyboard / gray\_sweater & 0.9724 & 2 \\
+split-cookie & split-cookie / blue\_checkered\_paper & 0.9723 & 13 \\
+torchocolate & torchocolate / cutting\_board & 0.9779 & 5 \\
+\bottomrule
+\end{longtable}
+\normalsize
+
+\paragraph{Baseline official masks: best object per scene}
+\small
+\begin{longtable}{llrl}
+\toprule
+Scene & Best target/object & mIoU & Best k \\
+\midrule
+\endfirsthead
+\toprule
+Scene & Best target/object & mIoU & Best k \\
+\midrule
+\endhead
+americano & americano / hand & 0.4907 & 7 \\
+chickchicken & chickchicken / white\_towel & 0.6152 & 7 \\
+espresso & espresso / countertop & 0.5918 & 1 \\
+keyboard & keyboard / table\_surface & 0.6011 & 11 \\
+split-cookie & split-cookie / blue\_checkered\_paper & 0.4861 & 3 \\
+torchocolate & torchocolate / countertop & 0.7996 & 5 \\
+\bottomrule
+\end{longtable}
+\normalsize
+
+\section{Neu3D Non-Union Results and Ablations}
+The best observed Neu3D single-cluster component variant is no-motion-no-boundary at 0.9003 mIoU.  All tables in this section use normal single-cluster mIoU only.
+\paragraph{Neu3D paper benchmark method means}
+\small
+\begin{longtable}{lrr}
+\toprule
+Method & Scenes & Mean mIoU \\
+\midrule
+\endfirsthead
+\toprule
+Method & Scenes & Mean mIoU \\
+\midrule
+\endhead
+kmeans\_k14 & 5 & 0.7471 \\
+leiden & 5 & 0.7832 \\
+\bottomrule
+\end{longtable}
+\normalsize
+
+\paragraph{Neu3D paper benchmark per scene}
+\small
+\begin{longtable}{llr}
+\toprule
+Method & Scene & mIoU \\
+\midrule
+\endfirsthead
+\toprule
+Method & Scene & mIoU \\
+\midrule
+\endhead
+kmeans\_k14 & coffee\_martini & 0.8961 \\
+kmeans\_k14 & cook\_spinach & 0.8379 \\
+kmeans\_k14 & cut\_roasted\_beef & 0.7333 \\
+kmeans\_k14 & flame\_steak & 0.6755 \\
+kmeans\_k14 & sear\_steak & 0.5925 \\
+leiden & coffee\_martini & 0.9018 \\
+leiden & cook\_spinach & 0.7281 \\
+leiden & cut\_roasted\_beef & 0.9093 \\
+leiden & flame\_steak & 0.6881 \\
+leiden & sear\_steak & 0.6888 \\
+\bottomrule
+\end{longtable}
+\normalsize
+
+\paragraph{Neu3D component ablation summary}
+\small
+\begin{longtable}{lrr}
+\toprule
+Variant & Done & Mean mIoU \\
+\midrule
+\endfirsthead
+\toprule
+Variant & Done & Mean mIoU \\
+\midrule
+\endhead
+default & 5 & 0.7450 \\
+no\_geo & 5 & 0.7076 \\
+no\_motion & 5 & 0.8821 \\
+no\_boundary & 5 & 0.5074 \\
+no\_motion\_no\_boundary & 5 & 0.9003 \\
+\bottomrule
+\end{longtable}
+\normalsize
+
+\paragraph{Neu3D component ablations per scene}
+\small
+\begin{longtable}{lllr}
+\toprule
+Variant & Scene & Status & mIoU \\
+\midrule
+\endfirsthead
+\toprule
+Variant & Scene & Status & mIoU \\
+\midrule
+\endhead
+default & coffee\_martini & done & 0.9017 \\
+default & cook\_spinach & done & 0.7263 \\
+default & cut\_roasted\_beef & done & 0.8081 \\
+default & flame\_steak & done & 0.6008 \\
+default & sear\_steak & done & 0.6882 \\
+no\_geo & coffee\_martini & done & 0.7664 \\
+no\_geo & cook\_spinach & done & 0.8037 \\
+no\_geo & cut\_roasted\_beef & done & 0.6737 \\
+no\_geo & flame\_steak & done & 0.6631 \\
+no\_geo & sear\_steak & done & 0.6312 \\
+no\_motion & coffee\_martini & done & 0.7666 \\
+no\_motion & cook\_spinach & done & 0.9406 \\
+no\_motion & cut\_roasted\_beef & done & 0.8840 \\
+no\_motion & flame\_steak & done & 0.9109 \\
+no\_motion & sear\_steak & done & 0.9085 \\
+no\_boundary & coffee\_martini & done & 0.8992 \\
+no\_boundary & cook\_spinach & done & 0.7299 \\
+no\_boundary & cut\_roasted\_beef & done & 0.7360 \\
+no\_boundary & flame\_steak & done & 0.0881 \\
+no\_boundary & sear\_steak & done & 0.0839 \\
+no\_motion\_no\_boundary & coffee\_martini & done & 0.9005 \\
+no\_motion\_no\_boundary & cook\_spinach & done & 0.8959 \\
+no\_motion\_no\_boundary & cut\_roasted\_beef & done & 0.8978 \\
+no\_motion\_no\_boundary & flame\_steak & done & 0.8920 \\
+no\_motion\_no\_boundary & sear\_steak & done & 0.9153 \\
+\bottomrule
+\end{longtable}
+\normalsize
+
+\paragraph{Neu3D older multiple\_ablation Leiden checkpoint runs}
+\small
+\begin{longtable}{lp{10cm}r}
+\toprule
+Scene & Run & mIoU \\
+\midrule
+\endfirsthead
+\toprule
+Scene & Run & mIoU \\
+\midrule
+\endhead
+coffee\_martini & leiden\_res0.018\_sc0.8\_ss1.0\_p2.0\_k20\_mot20\_B-v12a5.0b2.0g2.0\_10-19 & 0.9017 \\
+cook\_spinach & leiden\_res0.018\_sc0.8\_ss1.0\_p2.0\_k20\_mot20\_B-v12a5.0b2.0g2.0\_10-37 & 0.7133 \\
+cut\_roasted\_beef & leiden\_res0.018\_sc0.8\_ss1.0\_p2.0\_k20\_mot20\_B-v12a5.0b2.0g2.0\_10-52 & 0.8081 \\
+flame\_steak & leiden\_res0.018\_sc0.8\_ss1.0\_p2.0\_k20\_mot20\_B-v12a5.0b2.0g2.0\_10-40 & 0.6872 \\
+sear\_steak & leiden\_res0.018\_sc0.8\_ss1.0\_p2.0\_k20\_mot20\_B-v12a5.0b2.0g2.0\_10-54 & 0.6204 \\
+\bottomrule
+\end{longtable}
+\normalsize
+
+\subsection{Neu3D Resolution Sweep Artifact}
+The available Neu3D resolution-sweep artifact is a Cook Spinach Leiden run at resolution 0.004.  The report records 31 communities, modularity $Q=0.8685$, 453,026 valid Gaussians, and 19.927 seconds for graph/build/cluster total; no evaluation JSON is present beside this report, so it is documented as a parameter/runtime artifact rather than an mIoU table.
+\section{Greedy/Union Proposal Ablation}\label{sec:proposal-ablation}
+This section is the only place where cluster-union values are reported.  These numbers combine multiple predicted clusters chosen by a greedy/object-level rule and therefore estimate proposal coverage or post-hoc cluster-union potential.  They should not be mixed with the normal single best-cluster tables above.
+\paragraph{Headline union/proposal mIoU numbers}
+\small
+\begin{longtable}{llrl}
+\caption{Diagnostic union/proposal scores.  These use greedy cluster unions and are separated from the main non-union mIoU results.}\\
+\toprule
+Dataset / source & Best method or variant & Mean union mIoU & Notes \\
+\midrule
+\endfirsthead
+\toprule
+Dataset / source & Best method or variant & Mean union mIoU & Notes \\
+\midrule
+\endhead
+HyperNeRF paper benchmark bundle & pidinet\_leiden & 0.7587 & 8 JSON scenes present \\
+Neu3D component ablation & no\_motion & 0.9129 & component ablation union score \\
+Neu3D paper benchmark bundle & leiden & 0.7838 & 5 JSON scenes present \\
+\bottomrule
+\end{longtable}
+\normalsize
+
+\paragraph{HyperNeRF diagnostic proposal upper bound}
+\small
+\begin{longtable}{lrlrr}
+\caption{GT-selected cluster unions are diagnostic only; they show proposal coverage, not deployable single-cluster performance.}\\
+\toprule
+Scene & Oracle union mIoU & Selected clusters & Num selected & K seen \\
+\midrule
+\endfirsthead
+\toprule
+Scene & Oracle union mIoU & Selected clusters & Num selected & K seen \\
+\midrule
+\endhead
+chickchicken & 0.9186 & 4 1 8 & 3 & 20 \\
+cut-lemon1 & 0.7203 & 2 8 & 2 & 12 \\
+hand1-dense-v2 & 0.9034 & 7 & 1 & 10 \\
+slice-banana & 0.7466 & 3 2 6 4 & 4 & 13 \\
+torchocolate & 0.7039 & 24 & 1 & 34 \\
+americano & 0.3678 & 11 & 1 & 39 \\
+espresso & 0.3267 & 6 & 1 & 164 \\
+keyboard & 0.7572 & 5 3 & 2 & 26 \\
+oven-mitts & 0.8544 & 7 3 6 & 3 & 27 \\
+split-cookie & 0.7691 & 16 17 & 2 & 21 \\
+\bottomrule
+\end{longtable}
+\normalsize
+
+\paragraph{HyperNeRF full 10 union ablation}
+\small
+\begin{longtable}{llrrrl}
+\caption{Union mIoU for the full-10 baseline before targeted overrides.  This is a greedy cluster-union ablation, not the main score.}\\
+\toprule
+Split & Scene & Union mIoU & Frames & K used & Selected clusters \\
+\midrule
+\endfirsthead
+\toprule
+Split & Scene & Union mIoU & Frames & K used & Selected clusters \\
+\midrule
+\endhead
+interp & chickchicken & 0.9181 & 97 & 22 & 4 1 8 \\
+interp & cut-lemon1 & 0.7153 & 399 & 13 & 2 8 \\
+interp & hand1-dense-v2 & 0.9027 & 295 & 15 & 7 \\
+interp & slice-banana & 0.7450 & 51 & 15 & 3 2 6 4 \\
+interp & torchocolate & 0.7000 & 174 & 35 & 24 \\
+misc & americano & 0.3371 & 131 & 39 & 11 \\
+misc & espresso & 0.3281 & 194 & 165 & 6 \\
+misc & keyboard & 0.7539 & 156 & 26 & 5 3 \\
+misc & oven-mitts & 0.8578 & 139 & 29 & 7 3 6 \\
+misc & split-cookie & 0.7707 & 93 & 21 & 16 17 \\
+\bottomrule
+\end{longtable}
+\normalsize
+
+\paragraph{HyperNeRF paper benchmark union means}
+\small
+\begin{longtable}{lrr}
+\caption{Paper-benchmark greedy-union mIoU from the JSON files present in the checkout.}\\
+\toprule
+Method & Scenes & Mean union mIoU \\
+\midrule
+\endfirsthead
+\toprule
+Method & Scenes & Mean union mIoU \\
+\midrule
+\endhead
+baseline\_leiden & 8 & 0.7573 \\
+pidinet\_leiden & 8 & 0.7587 \\
+\bottomrule
+\end{longtable}
+\normalsize
+
+\paragraph{HyperNeRF paper benchmark union per scene}
+\small
+\begin{longtable}{llr}
+\toprule
+Method & Scene & Union mIoU \\
+\midrule
+\endfirsthead
+\toprule
+Method & Scene & Union mIoU \\
+\midrule
+\endhead
+baseline\_leiden & cut-lemon1 & 0.8143 \\
+baseline\_leiden & espresso & 0.4741 \\
+baseline\_leiden & hand1-dense-v2 & 0.8794 \\
+baseline\_leiden & keyboard & 0.6139 \\
+baseline\_leiden & oven-mitts & 0.9414 \\
+baseline\_leiden & slice-banana & 0.8402 \\
+baseline\_leiden & split-cookie & 0.8096 \\
+baseline\_leiden & torchocolate & 0.6855 \\
+pidinet\_leiden & cut-lemon1 & 0.7963 \\
+pidinet\_leiden & espresso & 0.3940 \\
+pidinet\_leiden & hand1-dense-v2 & 0.8794 \\
+pidinet\_leiden & keyboard & 0.7684 \\
+pidinet\_leiden & oven-mitts & 0.9414 \\
+pidinet\_leiden & slice-banana & 0.7984 \\
+pidinet\_leiden & split-cookie & 0.8080 \\
+pidinet\_leiden & torchocolate & 0.6839 \\
+\bottomrule
+\end{longtable}
+\normalsize
+
+\paragraph{Neu3D paper benchmark union means}
+\small
+\begin{longtable}{lrr}
+\caption{Neu3D paper-benchmark greedy-union mIoU.}\\
+\toprule
+Method & Scenes & Mean union mIoU \\
+\midrule
+\endfirsthead
+\toprule
+Method & Scenes & Mean union mIoU \\
+\midrule
+\endhead
+kmeans\_k14 & 5 & 0.7471 \\
+leiden & 5 & 0.7838 \\
+\bottomrule
+\end{longtable}
+\normalsize
+
+\paragraph{Neu3D paper benchmark union per scene}
+\small
+\begin{longtable}{llr}
+\toprule
+Method & Scene & Union mIoU \\
+\midrule
+\endfirsthead
+\toprule
+Method & Scene & Union mIoU \\
+\midrule
+\endhead
+kmeans\_k14 & coffee\_martini & 0.8961 \\
+kmeans\_k14 & cook\_spinach & 0.8379 \\
+kmeans\_k14 & cut\_roasted\_beef & 0.7333 \\
+kmeans\_k14 & flame\_steak & 0.6755 \\
+kmeans\_k14 & sear\_steak & 0.5925 \\
+leiden & coffee\_martini & 0.9018 \\
+leiden & cook\_spinach & 0.7311 \\
+leiden & cut\_roasted\_beef & 0.9093 \\
+leiden & flame\_steak & 0.6881 \\
+leiden & sear\_steak & 0.6888 \\
+\bottomrule
+\end{longtable}
+\normalsize
+
+\paragraph{Neu3D component union ablation summary}
+\small
+\begin{longtable}{lrr}
+\caption{Neu3D component ablation evaluated with greedy cluster unions.}\\
+\toprule
+Variant & Done & Mean union mIoU \\
+\midrule
+\endfirsthead
+\toprule
+Variant & Done & Mean union mIoU \\
+\midrule
+\endhead
+default & 5 & 0.7456 \\
+no\_geo & 5 & 0.7121 \\
+no\_motion & 5 & 0.9129 \\
+no\_boundary & 5 & 0.5080 \\
+no\_motion\_no\_boundary & 5 & 0.9011 \\
+\bottomrule
+\end{longtable}
+\normalsize
+
+\paragraph{Neu3D component union ablations per scene}
+\small
+\begin{longtable}{lllr}
+\caption{Per-scene union mIoU for Neu3D component variants.}\\
+\toprule
+Variant & Scene & Status & Union mIoU \\
+\midrule
+\endfirsthead
+\toprule
+Variant & Scene & Status & Union mIoU \\
+\midrule
+\endhead
+default & coffee\_martini & done & 0.9017 \\
+default & cook\_spinach & done & 0.7293 \\
+default & cut\_roasted\_beef & done & 0.8081 \\
+default & flame\_steak & done & 0.6008 \\
+default & sear\_steak & done & 0.6882 \\
+no\_geo & coffee\_martini & done & 0.7664 \\
+no\_geo & cook\_spinach & done & 0.8070 \\
+no\_geo & cut\_roasted\_beef & done & 0.6926 \\
+no\_geo & flame\_steak & done & 0.6631 \\
+no\_geo & sear\_steak & done & 0.6312 \\
+no\_motion & coffee\_martini & done & 0.8919 \\
+no\_motion & cook\_spinach & done & 0.9445 \\
+no\_motion & cut\_roasted\_beef & done & 0.9087 \\
+no\_motion & flame\_steak & done & 0.9109 \\
+no\_motion & sear\_steak & done & 0.9085 \\
+no\_boundary & coffee\_martini & done & 0.8992 \\
+no\_boundary & cook\_spinach & done & 0.7329 \\
+no\_boundary & cut\_roasted\_beef & done & 0.7360 \\
+no\_boundary & flame\_steak & done & 0.0881 \\
+no\_boundary & sear\_steak & done & 0.0839 \\
+no\_motion\_no\_boundary & coffee\_martini & done & 0.9005 \\
+no\_motion\_no\_boundary & cook\_spinach & done & 0.8996 \\
+no\_motion\_no\_boundary & cut\_roasted\_beef & done & 0.8978 \\
+no\_motion\_no\_boundary & flame\_steak & done & 0.8920 \\
+no\_motion\_no\_boundary & sear\_steak & done & 0.9153 \\
+\bottomrule
+\end{longtable}
+\normalsize
+
+\paragraph{Long-range merge union summary by scene}
+\small
+\begin{longtable}{lrrrr}
+\caption{Greedy cluster-union mIoU for long-range merge against official masks.}\\
+\toprule
+Ablation & Scenes & Targets & Mean target union mIoU & Mean top/scene union mIoU \\
+\midrule
+\endfirsthead
+\toprule
+Ablation & Scenes & Targets & Mean target union mIoU & Mean top/scene union mIoU \\
+\midrule
+\endhead
+americano & 1 & 10 & 0.2736 & 0.6043 \\
+chickchicken & 1 & 9 & 0.4271 & 0.7066 \\
+espresso & 1 & 8 & 0.3036 & 0.6370 \\
+keyboard & 1 & 9 & 0.5039 & 0.7616 \\
+split-cookie & 1 & 10 & 0.4953 & 0.8412 \\
+torchocolate & 1 & 20 & 0.4946 & 0.9213 \\
+\bottomrule
+\end{longtable}
+\normalsize
+
+\paragraph{Long-range remap-fast tau 070 union summary}
+\small
+\begin{longtable}{lrrrr}
+\caption{Greedy cluster-union mIoU for the tau 070 remap-fast ablation.}\\
+\toprule
+Ablation & Scenes & Targets & Mean target union mIoU & Mean top/scene union mIoU \\
+\midrule
+\endfirsthead
+\toprule
+Ablation & Scenes & Targets & Mean target union mIoU & Mean top/scene union mIoU \\
+\midrule
+\endhead
+americano & 1 & 10 & 0.2565 & 0.6043 \\
+chickchicken & 1 & 9 & 0.3014 & 0.6856 \\
+espresso & 1 & 8 & 0.2333 & 0.5309 \\
+keyboard & 1 & 9 & 0.2053 & 0.5341 \\
+split-cookie & 1 & 10 & 0.3130 & 0.7735 \\
+torchocolate & 1 & 20 & 0.4478 & 0.9213 \\
+\bottomrule
+\end{longtable}
+\normalsize
+
+\paragraph{Long-range remap-fast tau 075 union summary}
+\small
+\begin{longtable}{lrrrr}
+\caption{Greedy cluster-union mIoU for the tau 075 remap-fast ablation.}\\
+\toprule
+Ablation & Scenes & Targets & Mean target union mIoU & Mean top/scene union mIoU \\
+\midrule
+\endfirsthead
+\toprule
+Ablation & Scenes & Targets & Mean target union mIoU & Mean top/scene union mIoU \\
+\midrule
+\endhead
+americano & 1 & 10 & 0.2730 & 0.6043 \\
+chickchicken & 1 & 9 & 0.4291 & 0.7066 \\
+espresso & 1 & 8 & 0.3033 & 0.6346 \\
+keyboard & 1 & 9 & 0.3134 & 0.5341 \\
+split-cookie & 1 & 10 & 0.4733 & 0.8412 \\
+torchocolate & 1 & 20 & 0.4575 & 0.9213 \\
+\bottomrule
+\end{longtable}
+\normalsize
+
+\paragraph{Long-range remap-fast tau 080 union summary}
+\small
+\begin{longtable}{lrrrr}
+\caption{Greedy cluster-union mIoU for the tau 080 remap-fast ablation.}\\
+\toprule
+Ablation & Scenes & Targets & Mean target union mIoU & Mean top/scene union mIoU \\
+\midrule
+\endfirsthead
+\toprule
+Ablation & Scenes & Targets & Mean target union mIoU & Mean top/scene union mIoU \\
+\midrule
+\endhead
+americano & 1 & 10 & 0.2736 & 0.6043 \\
+chickchicken & 1 & 9 & 0.4291 & 0.7066 \\
+espresso & 1 & 8 & 0.3036 & 0.6370 \\
+keyboard & 1 & 9 & 0.4348 & 0.7044 \\
+split-cookie & 1 & 10 & 0.4953 & 0.8412 \\
+torchocolate & 1 & 20 & 0.4946 & 0.9213 \\
+\bottomrule
+\end{longtable}
+\normalsize
+
+\section{Parameter Settings}
+\paragraph{Parameter/method settings represented in this report}
+\small
+\begin{longtable}{llllp{5cm}p{5cm}}
+\toprule
+Run family & Clusterer & Resolution & kNN k & Main knobs & Source \\
+\midrule
+\endfirsthead
+\toprule
+Run family & Clusterer & Resolution & kNN k & Main knobs & Source \\
+\midrule
+\endhead
+HyperNeRF baseline\_leiden & Leiden & 0.018 & 20 & motion=true, boundary=true, Sobel edges & paper\_benchmark\_runs/hypernerf/baseline\_leiden/PARAMS.md \\
+HyperNeRF pidinet\_leiden & Leiden & 0.018 & 20 & same as baseline, PidiNet edges & paper\_benchmark\_runs/hypernerf/pidinet\_leiden/PARAMS.md \\
+HyperNeRF final default & Leiden & 0.03 & 20 & motion=true, boundary=true, targeted long-range overrides & output/final\_hypernerf\_1/targeted\_longrange\_default\_config.csv \\
+Neu3D kmeans\_k14 & Spectral+kmeans & n/a & 20 & n\_clusters=14, motion=true, boundary=true & paper\_benchmark\_runs/neu3d/kmeans\_k14/PARAMS.md \\
+Neu3D leiden & Leiden & 0.018 & 20 & motion=true, boundary=true & paper\_benchmark\_runs/neu3d/leiden/PARAMS.md \\
+Neu3D component default & Leiden & 0.03 & 20 & motion=true, boundary=true & output/final\_neu3d\_component\_ablations/summary.md \\
+\bottomrule
+\end{longtable}
+\normalsize
+
+\section{Source Artifact Inventory}
+\paragraph{Files summarized}
+\small
+\begin{longtable}{p{15cm}}
+\toprule
+Source file or pattern \\
+\midrule
+\endfirsthead
+\toprule
+Source file or pattern \\
+\midrule
+\endhead
+output/final\_hypernerf\_1/README.md \\
+output/final\_hypernerf\_1/maskbenchmark\_full10\_res003\_default\_trase\_style.csv \\
+output/final\_hypernerf\_1/targeted\_longrange\_default\_config.csv \\
+output/final\_hypernerf\_1/ablations/method\_summary.csv \\
+output/final\_hypernerf\_1/ablations/per\_scene\_method\_ablation.csv \\
+output/final\_hypernerf\_1/ablations/targeted\_leave\_one\_in.csv \\
+output/final\_hypernerf\_1/ablations/targeted\_leave\_one\_out.csv \\
+output/final\_hypernerf\_1/ablations/baseline\_proposal\_greedy\_upper\_bound.csv \\
+output/sam\_mask\_eval/full10\_maskbenchmark\_res003\_motion\_boundary.csv \\
+output/sam\_mask\_eval/default\_trase\_mask\_scene\_method\_comparison.csv \\
+output/sam\_mask\_eval/no\_mask\_candidate\_sweep\_best\_cluster.csv \\
+output/sam\_mask\_eval/no\_mask\_map\_postprocess\_sweep.csv \\
+output/sam\_mask\_eval/one\_method\_leiden\_motion\_longrange\_merge\_vs\_original\_masks.csv \\
+output/sam\_mask\_eval/leiden\_motion\_merge\_tau070\_remapfast\_vs\_original\_masks.csv \\
+output/sam\_mask\_eval/leiden\_motion\_merge\_tau075\_remapfast\_vs\_original\_masks.csv \\
+output/sam\_mask\_eval/leiden\_motion\_merge\_tau080\_remapfast\_vs\_original\_masks.csv \\
+output/hypernerf\_improvement\_summary/all\_trials.csv \\
+output/hypernerf\_improvement\_summary/best\_by\_scene.csv \\
+paper\_benchmark\_runs/hypernerf/baseline\_leiden/PARAMS.md \\
+paper\_benchmark\_runs/hypernerf/pidinet\_leiden/PARAMS.md \\
+paper\_benchmark\_runs/neu3d/kmeans\_k14/PARAMS.md \\
+paper\_benchmark\_runs/neu3d/leiden/PARAMS.md \\
+output/final\_neu3d\_component\_ablations/component\_ablation\_summary.csv \\
+output/final\_neu3d\_component\_ablations/component\_ablation\_per\_scene.csv \\
+multiple\_ablation/neu3d\_leiden\_ckpts/*/*/metric JSONs \\
+outputs/neu3d\_leiden\_res\_sweep\_cook2/.../report.md \\
+\bottomrule
+\end{longtable}
+\normalsize
+
+\end{document}

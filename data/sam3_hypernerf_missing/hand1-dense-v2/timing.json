@@ -1,0 +1,14 @@
+{
+  "scene": "hand1-dense-v2",
+  "prompt": "hand + arm + floor + rug",
+  "rgb_dir": "data/HyperNeRF/interp/hand1-dense-v2/rgb/2x",
+  "frames": 1734,
+  "output_frames": 1734,
+  "mean_masks_per_frame": 3.679930795847751,
+  "max_masks_per_frame": 5,
+  "start_session_sec": 94.35616964700603,
+  "close_session_sec": 0.14704282599996077,
+  "save_aggregate_sec": 19.114635975995043,
+  "total_sec": 643.0748663179984,
+  "prompt_count": 4
+}

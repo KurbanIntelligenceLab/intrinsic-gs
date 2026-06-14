@@ -1,0 +1,223 @@
+\documentclass[10pt]{article}
+\usepackage[margin=0.65in]{geometry}
+\usepackage{booktabs,longtable,array}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0.45em}
+\renewcommand{\arraystretch}{1.08}
+
+\begin{document}
+\title{Consolidated Available Results, Selected Settings, and Remaining Gaps}
+\author{Generated from repository result artifacts}
+\date{May 29, 2026}
+\maketitle
+
+\section{Purpose}
+This note consolidates the result artifacts currently present in the repository for Neu3D and HyperNeRF.  It also selects one metric-facing setting per dataset and records which reviewer-facing items are closed, partially available, or still missing.
+
+Normal mIoU denotes the single best-cluster score.  Greedy mIoU denotes the greedy cluster-union diagnostic score.  mAcc is included whenever available.
+
+\section{Selected Settings}
+\small
+\begin{longtable}{p{2.7cm}p{4.2cm}p{7.4cm}rrrr}
+\toprule
+Dataset & Selected setting & Parameters & mIoU & Greedy mIoU & mAcc & Greedy mAcc \\
+\midrule
+\endfirsthead
+\toprule
+Dataset & Selected setting & Parameters & mIoU & Greedy mIoU & mAcc & Greedy mAcc \\
+\midrule
+\endhead
+Neu3D & Leiden 0.018, no-motion component variant & $k=20$, $\sigma_c=0.8$, $\sigma_s=1.0$, $p=2.0$; geometry enabled; motion disabled; Sobel boundary enabled with 12 views, $\alpha=5.0$, $\beta=2.0$, $\gamma=2.0$ & \textbf{0.9063} & \textbf{0.9120} & \textbf{0.9947} & \textbf{0.9950} \\
+HyperNeRF, single global method & Leiden 0.03 + global objectness long-range & Leiden full motion+boundary baseline; global objectness long-range with $\tau_{\mathrm{lr}}=0.70$, trajectory min 0.995, visibility-correlation max 0.25, max components 6, max component clusters 5, max area fraction 0.55, top neighbors 8, objectness weight 0.15, visibility weight 0.10 & \textbf{0.5746} & n/a & \textbf{0.9308} & n/a \\
+HyperNeRF, best available package & Targeted per-scene default & Uses the fixed Leiden 0.03 baseline and per-scene long-range choices from \texttt{targeted\_longrange\_default\_config.csv}.  This is the strongest available result, but it is not a single global long-range configuration. & \textbf{0.6154} & n/a & \textbf{0.9441} & n/a \\
+\bottomrule
+\end{longtable}
+\normalsize
+
+For a paper that describes one fixed global HyperNeRF method with long-range always enabled, use the ``HyperNeRF, single global method'' row.  The targeted row can be reported as an oracle/tuned or supplementary variant, but should not be described as one fixed global configuration.
+
+\section{Neu3D Main Leiden Benchmark}
+The paper-benchmark Neu3D Leiden run is complete for all five scenes.
+
+\small
+\begin{longtable}{lrrrr}
+\toprule
+Scene & Normal mIoU & Greedy mIoU & Normal mAcc & Greedy mAcc \\
+\midrule
+\endfirsthead
+\toprule
+Scene & Normal mIoU & Greedy mIoU & Normal mAcc & Greedy mAcc \\
+\midrule
+\endhead
+coffee\_martini & 0.9018 & 0.9018 & 0.9941 & 0.9941 \\
+cook\_spinach & 0.7281 & 0.7311 & 0.9810 & 0.9812 \\
+cut\_roasted\_beef & 0.9093 & 0.9093 & 0.9946 & 0.9946 \\
+flame\_steak & 0.6881 & 0.6881 & 0.9781 & 0.9781 \\
+sear\_steak & 0.6888 & 0.6888 & 0.9776 & 0.9776 \\
+\midrule
+\textbf{Mean} & \textbf{0.7832} & \textbf{0.7838} & \textbf{0.9851} & \textbf{0.9851} \\
+\bottomrule
+\end{longtable}
+\normalsize
+
+\section{Neu3D Leiden 0.018 Component Ablation}
+The previous Neu3D holes are filled: all five variants are complete on all five scenes, including \texttt{sear\_steak} and the boundary-free \texttt{cut\_roasted\_beef} runs.
+
+\small
+\begin{longtable}{lrrrr}
+\toprule
+Variant & Scenes & Normal mIoU & Greedy mIoU & Normal mAcc \\
+\midrule
+\endfirsthead
+\toprule
+Variant & Scenes & Normal mIoU & Greedy mIoU & Normal mAcc \\
+\midrule
+\endhead
+default & 5 & 0.7461 & 0.7467 & 0.9817 \\
+no\_geo & 5 & 0.7320 & 0.7375 & 0.9807 \\
+no\_motion & 5 & \textbf{0.9063} & \textbf{0.9120} & \textbf{0.9947} \\
+no\_boundary & 5 & 0.4117 & 0.4123 & 0.7443 \\
+no\_motion\_no\_boundary & 5 & 0.9018 & 0.9025 & 0.9945 \\
+\bottomrule
+\end{longtable}
+\normalsize
+
+\small
+\begin{longtable}{lrrrrr}
+\toprule
+Variant & coffee\_martini & cook\_spinach & cut\_roasted\_beef & flame\_steak & sear\_steak \\
+\midrule
+\endfirsthead
+\toprule
+Variant & coffee\_martini & cook\_spinach & cut\_roasted\_beef & flame\_steak & sear\_steak \\
+\midrule
+\endhead
+default & 0.9017 & 0.7133 & 0.8081 & 0.6872 & 0.6204 \\
+no\_geo & 0.7664 & 0.8037 & 0.8663 & 0.5919 & 0.6317 \\
+no\_motion & 0.8892 & \textbf{0.9419} & 0.8815 & \textbf{0.9109} & 0.9083 \\
+no\_boundary & 0.8992 & 0.6499 & 0.3526 & 0.0820 & 0.0750 \\
+no\_motion\_no\_boundary & 0.9006 & 0.9007 & \textbf{0.8978} & 0.8938 & \textbf{0.9159} \\
+\bottomrule
+\end{longtable}
+\normalsize
+
+\paragraph{Neu3D interpretation.}
+The coarse Neu3D object-mask metric favors removing motion, or removing both motion and boundary, because those variants form cleaner large foreground object masks.  Qualitative all-cluster visualizations show a different tradeoff: the full variant preserves more fine-grained small-object and scene structure.  The metric-facing selected Neu3D row is therefore \texttt{no\_motion}, but the paper should note that the full variant is visually stronger for all-cluster partition detail.
+
+\section{HyperNeRF Final Method Results}
+\small
+\begin{longtable}{lrrp{7.6cm}}
+\toprule
+Method & Mean mIoU & Mean mAcc & Notes \\
+\midrule
+\endfirsthead
+\toprule
+Method & Mean mIoU & Mean mAcc & Notes \\
+\midrule
+\endhead
+baseline\_res003 & 0.5418 & 0.9289 & Leiden 0.03 full motion+boundary baseline, no long-range. \\
+global\_objectness\_longrange & \textbf{0.5746} & \textbf{0.9308} & One rendered global long-range setting; this is the best single global HyperNeRF method-compatible row. \\
+fast\_sweep\_global\_best & 0.5847 & 0.9358 & Image-space sweep estimate, not a fully rendered all-scene final method. \\
+targeted\_default & \textbf{0.6154} & \textbf{0.9441} & Rendered fixed per-scene default preset; best available package, but not one global long-range configuration. \\
+\bottomrule
+\end{longtable}
+\normalsize
+
+\section{HyperNeRF Component Ablation}
+\small
+\begin{longtable}{lrrrrr}
+\toprule
+Variant & Scenes & Normal mIoU & Greedy mIoU & Normal mAcc & Greedy mAcc \\
+\midrule
+\endfirsthead
+\toprule
+Variant & Scenes & Normal mIoU & Greedy mIoU & Normal mAcc & Greedy mAcc \\
+\midrule
+\endhead
+default & 10 & \textbf{0.5345} & \textbf{0.7029} & \textbf{0.9289} & \textbf{0.9631} \\
+no\_geo & 10 & 0.4863 & 0.6699 & 0.8998 & 0.9341 \\
+no\_motion & 10 & 0.4822 & 0.6135 & 0.9124 & 0.9335 \\
+no\_boundary & 10 & 0.4127 & 0.5318 & 0.9064 & 0.9170 \\
+no\_motion\_no\_boundary & 10 & 0.4143 & 0.5293 & 0.9085 & 0.9193 \\
+\bottomrule
+\end{longtable}
+\normalsize
+
+Unlike Neu3D, HyperNeRF favors the full/default motion+boundary variant.
+
+\section{HyperNeRF Solver and Boundary Operator Artifacts}
+\small
+\begin{longtable}{lrrrrp{5.6cm}}
+\toprule
+Artifact & Scenes & Normal mIoU & Greedy mIoU & Normal mAcc & Notes \\
+\midrule
+\endfirsthead
+\toprule
+Artifact & Scenes & Normal mIoU & Greedy mIoU & Normal mAcc & Notes \\
+\midrule
+\endhead
+Leiden 0.018 solver sweep & 10 & 0.2125 & 0.2456 & 0.8453 & Old no-motion/no-boundary solver sweep from \texttt{hypernerf\_all\_clusterers\_summary}. \\
+Spectral k-means solver sweep & 10 & 0.1875 & 0.2835 & 0.8562 & Same sweep, k-means baseline. \\
+HDBSCAN solver sweep & 10 & 0.1794 & 0.2726 & 0.7908 & Same sweep; closes the HDBSCAN artifact gap. \\
+PiDiNet Leiden & 8 & 0.5661 & 0.7587 & 0.9288 & HyperNeRF-only PiDiNet artifact; two scenes missing from this bundle. \\
+\bottomrule
+\end{longtable}
+\normalsize
+
+\section{Status Against Open Reviewer Items}
+\small
+\begin{longtable}{p{0.7cm}p{7.3cm}p{7.0cm}}
+\toprule
+\# & Item & Current status \\
+\midrule
+\endfirsthead
+\toprule
+\# & Item & Current status \\
+\midrule
+\endhead
+1 & Neu3D \texttt{sear\_steak} all five component variants & Closed.  All five \texttt{sear\_steak} rows are present in \texttt{component\_ablation\_per\_scene.csv}. \\
+2 & Neu3D \texttt{cut\_roasted\_beef} no-boundary and geo-only rows & Closed.  \texttt{no\_boundary}=0.3526 and \texttt{no\_motion\_no\_boundary}=0.8978 normal mIoU. \\
+3 & Main Neu3D table default \texttt{sear\_steak} and real five-scene mean & Closed.  Paper-benchmark Leiden mean is 0.7832 normal and 0.7838 greedy; Leiden 0.018 default component mean is 0.7461 normal. \\
+4 & HyperNeRF single global long-range configuration & Partially closed.  A global long-range row exists: 0.5746 mIoU, 0.9308 mAcc.  The stronger 0.6154 row is targeted/per-scene and should not be described as one global configuration. \\
+5 & Neu3D greedy union after completion & Closed.  Leiden 0.018 component default is 0.7461 to 0.7467; paper-benchmark Leiden is 0.7832 to 0.7838. \\
+6 & mAcc everywhere & Mostly closed for reported artifacts in this note: Neu3D, HyperNeRF final methods, component ablations, solver artifacts, and PiDiNet include mAcc.  Some older docs still omit mAcc and should be updated or superseded by this note. \\
+7 & Seed variance & Missing.  No seed-variance artifact was found.  Remove the unsupported ``$<0.005$'' claim or run seed repeats. \\
+8 & HDBSCAN result & Closed for HyperNeRF solver sweep.  Mean normal mIoU is 0.1794 and greedy mIoU is 0.2726. \\
+9 & Parameter sensitivity beyond $\rho$ & Partial.  Existing objectness/long-range sweeps are available, but no complete one-row sensitivity table was found for $k$, $p$, $T$, boundary views, $\sigma_c$, $\sigma_s$, $\eta$, and $\tau_{\mathrm{lr}}$. \\
+10 & All-cluster or non-oracle metric & Partial.  Greedy-union, selected-cluster counts, cluster counts, and all-mask visualizations exist.  Hungarian matching and over-segmentation rate are not present. \\
+11 & Failure-case renders & Partial.  Underlying runs/visualization folders exist for scenes such as \texttt{americano}, \texttt{espresso}, and Neu3D cooking scenes, but no curated failure-case figure artifact was found. \\
+12 & PiDiNet on Neu3D & Missing.  HyperNeRF PiDiNet is available for 8 scenes; Neu3D PiDiNet was not found.  Either run it or state PiDiNet is HyperNeRF-only. \\
+13 & Reliability-aware cue gate & Missing/new method.  No artifact found. \\
+\bottomrule
+\end{longtable}
+\normalsize
+
+\section{Source Artifacts}
+\small
+\begin{longtable}{p{15cm}}
+\toprule
+Source file or pattern \\
+\midrule
+\endfirsthead
+\toprule
+Source file or pattern \\
+\midrule
+\endhead
+paper\_benchmark\_runs/neu3d/leiden/*/miou\_results*.json and macc\_results*.json \\
+output/final\_neu3d\_leiden018\_component\_ablations/component\_ablation\_summary.csv \\
+output/final\_neu3d\_leiden018\_component\_ablations/component\_ablation\_per\_scene.csv \\
+output/final\_hypernerf\_1/ablations/method\_summary.csv \\
+output/final\_hypernerf\_1/ablations/per\_scene\_method\_ablation.csv \\
+output/final\_hypernerf\_1/maskbenchmark\_full10\_res003\_default\_trase\_style.csv \\
+output/final\_hypernerf\_1/targeted\_longrange\_default\_config.csv \\
+output/final\_hypernerf\_component\_ablation\_logs/component\_ablation\_summary.csv \\
+output/hypernerf\_all\_clusterers\_summary/method\_means.csv \\
+paper\_benchmark\_runs/hypernerf/pidinet\_leiden/*/miou\_results*.json and macc\_results*.json \\
+output/neu3d\_boundary\_all\_masks\_videos/contact\_sheet.png \\
+\bottomrule
+\end{longtable}
+\normalsize
+
+\end{document}

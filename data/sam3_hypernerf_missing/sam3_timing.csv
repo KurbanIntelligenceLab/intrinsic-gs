@@ -1,0 +1,5 @@
+scene,prompt,rgb_dir,frames,output_frames,mean_masks_per_frame,max_masks_per_frame,start_session_sec,close_session_sec,save_aggregate_sec,total_sec,prompt_count,model_load_sec
+slice-banana,banana + banana slicer + hand + cutting board + towel,data/HyperNeRF/interp/slice-banana/rgb/2x,330,330,8.23030303030303,11,17.953952750998724,0.14749792499787873,7.004030999996758,172.38016556300136,5,
+cut-lemon1,lemon + knife + hand + cutting board + wine bottle + countertop,data/HyperNeRF/interp/cut-lemon1/rgb/2x,1661,1661,6.886213124623721,11,88.2199541489972,0.3541155940038152,31.894664614002977,888.6652464839935,6,
+hand1-dense-v2,hand + arm + floor + rug,data/HyperNeRF/interp/hand1-dense-v2/rgb/2x,1734,1734,3.679930795847751,5,94.35616964700603,0.14704282599996077,19.114635975995043,643.0748663179984,4,
+oven-mitts,oven mitt + hand + arm + shirt + table,data/HyperNeRF/misc/oven-mitts/rgb/2x,556,556,4.967625899280575,7,30.240449884993723,0.1449479130023974,7.423983468004735,234.09240504600166,5,

@@ -1,0 +1,20 @@
+{
+  "text_prompt": "oven mitt + hand + arm + shirt + table",
+  "text_prompts": [
+    "oven mitt",
+    "hand",
+    "arm",
+    "shirt",
+    "table"
+  ],
+  "num_frames": 556,
+  "num_output_frames": 556,
+  "source_rgb_dir": "data/HyperNeRF/misc/oven-mitts/rgb/2x",
+  "prompt_metadata_files": [
+    "metadata_oven_mitt.json",
+    "metadata_hand.json",
+    "metadata_arm.json",
+    "metadata_shirt.json",
+    "metadata_table.json"
+  ]
+}

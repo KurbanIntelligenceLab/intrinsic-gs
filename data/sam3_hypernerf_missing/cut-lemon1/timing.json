@@ -1,0 +1,14 @@
+{
+  "scene": "cut-lemon1",
+  "prompt": "lemon + knife + hand + cutting board + wine bottle + countertop",
+  "rgb_dir": "data/HyperNeRF/interp/cut-lemon1/rgb/2x",
+  "frames": 1661,
+  "output_frames": 1661,
+  "mean_masks_per_frame": 6.886213124623721,
+  "max_masks_per_frame": 11,
+  "start_session_sec": 88.2199541489972,
+  "close_session_sec": 0.3541155940038152,
+  "save_aggregate_sec": 31.894664614002977,
+  "total_sec": 888.6652464839935,
+  "prompt_count": 6
+}

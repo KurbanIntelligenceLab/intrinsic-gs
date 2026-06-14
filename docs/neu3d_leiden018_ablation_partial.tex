@@ -1,0 +1,186 @@
+\documentclass[10pt]{article}
+\usepackage[margin=0.7in]{geometry}
+\usepackage{booktabs,longtable,array}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0.45em}
+\renewcommand{\arraystretch}{1.08}
+
+\begin{document}
+\title{Neu3D Leiden 0.018 Ablations and HyperNeRF Comparison}
+\author{Generated from repository result artifacts}
+\date{May 29, 2026}
+\maketitle
+
+\section{Reading Guide}
+This note replaces the earlier partial snapshot.  The Neu3D Leiden 0.018 component ablation is now complete for all five scenes.  Normal mIoU is the single best-cluster score.  Greedy mIoU is the greedy cluster-union diagnostic score.  mAcc is reported for completeness, but the discussion below focuses on mIoU.
+
+The main caveat is that the Neu3D mask benchmark evaluates a coarse foreground/object mask, not the quality of the full cluster partition.  Qualitative all-mask videos show that the full motion+boundary variant preserves more fine-grained scene structure, even though no-motion variants score higher on the coarse Neu3D mIoU.
+
+\section{Neu3D Component Ablation Summary}
+\small
+\begin{longtable}{lrrrrr}
+\toprule
+Variant & Scenes & Normal mIoU & Greedy mIoU & Normal mAcc & Greedy mAcc \\
+\midrule
+\endfirsthead
+\toprule
+Variant & Scenes & Normal mIoU & Greedy mIoU & Normal mAcc & Greedy mAcc \\
+\midrule
+\endhead
+default & 5 & 0.7461 & 0.7467 & 0.9817 & 0.9817 \\
+no\_geo & 5 & 0.7320 & 0.7375 & 0.9807 & 0.9810 \\
+no\_motion & 5 & \textbf{0.9063} & \textbf{0.9120} & \textbf{0.9947} & \textbf{0.9950} \\
+no\_boundary & 5 & 0.4117 & 0.4123 & 0.7443 & 0.7443 \\
+no\_motion\_no\_boundary & 5 & 0.9018 & 0.9025 & 0.9945 & 0.9945 \\
+\bottomrule
+\end{longtable}
+\normalsize
+
+\section{Neu3D Per-Scene Normal mIoU}
+\small
+\begin{longtable}{lrrrrr}
+\toprule
+Variant & coffee\_martini & cook\_spinach & cut\_roasted\_beef & flame\_steak & sear\_steak \\
+\midrule
+\endfirsthead
+\toprule
+Variant & coffee\_martini & cook\_spinach & cut\_roasted\_beef & flame\_steak & sear\_steak \\
+\midrule
+\endhead
+default & \textbf{0.9017} & 0.7133 & 0.8081 & 0.6872 & 0.6204 \\
+no\_geo & 0.7664 & 0.8037 & 0.8663 & 0.5919 & 0.6317 \\
+no\_motion & 0.8892 & \textbf{0.9419} & 0.8815 & \textbf{0.9109} & 0.9083 \\
+no\_boundary & 0.8992 & 0.6499 & 0.3526 & 0.0820 & 0.0750 \\
+no\_motion\_no\_boundary & 0.9006 & 0.9007 & \textbf{0.8978} & 0.8938 & \textbf{0.9159} \\
+\bottomrule
+\end{longtable}
+\normalsize
+
+\section{Neu3D Per-Scene Greedy mIoU}
+\small
+\begin{longtable}{lrrrrr}
+\toprule
+Variant & coffee\_martini & cook\_spinach & cut\_roasted\_beef & flame\_steak & sear\_steak \\
+\midrule
+\endfirsthead
+\toprule
+Variant & coffee\_martini & cook\_spinach & cut\_roasted\_beef & flame\_steak & sear\_steak \\
+\midrule
+\endhead
+default & \textbf{0.9017} & 0.7162 & 0.8081 & 0.6872 & 0.6204 \\
+no\_geo & 0.7664 & 0.8070 & 0.8906 & 0.5919 & 0.6317 \\
+no\_motion & 0.8892 & \textbf{0.9457} & \textbf{0.9062} & \textbf{0.9109} & 0.9083 \\
+no\_boundary & 0.8992 & 0.6525 & 0.3526 & 0.0820 & 0.0750 \\
+no\_motion\_no\_boundary & 0.9006 & 0.9044 & 0.8978 & 0.8938 & \textbf{0.9159} \\
+\bottomrule
+\end{longtable}
+\normalsize
+
+\section{Neu3D Interpretation}
+On the Neu3D coarse object-mask metric, the default full affinity is not the best variant at Leiden resolution 0.018.  Removing the motion term gives the highest mean mIoU, and removing both motion and boundary is a close second.  This pattern is driven by the cooking scenes: no\_motion or no\_motion\_no\_boundary improves cook\_spinach, cut\_roasted\_beef, flame\_steak, and sear\_steak by large margins relative to the default.
+
+This should not be read as evidence that the full affinity gives worse full-scene masks.  The Neu3D evaluation masks are coarse foreground/object masks.  The all-cluster visualizations in \texttt{output/neu3d\_boundary\_all\_masks\_videos/contact\_sheet.png} show that the full variant separates more fine-grained objects and surfaces: bottles, tabletop objects, utensils, counters, and background structure.  The simpler no-motion variants often produce a cleaner large foreground region, which helps the benchmark mIoU, but they merge more of the small scene structure.  For the paper, the safest statement is therefore:
+
+\emph{On Neu3D, the coarse object-mask metric favors simpler appearance/geometry affinities, while qualitative all-mask visualizations show that motion and boundary terms preserve richer fine-grained scene partitions.}
+
+\section{HyperNeRF Component Ablation Summary}
+The corresponding HyperNeRF component ablation does not show the Neu3D pattern.  On the ten-scene HyperNeRF set with Leiden resolution 0.03, the full/default variant is best in both normal and greedy mIoU.
+
+\small
+\begin{longtable}{lrrrrr}
+\toprule
+Variant & Scenes & Normal mIoU & Greedy mIoU & Normal mAcc & Greedy mAcc \\
+\midrule
+\endfirsthead
+\toprule
+Variant & Scenes & Normal mIoU & Greedy mIoU & Normal mAcc & Greedy mAcc \\
+\midrule
+\endhead
+default & 10 & \textbf{0.5345} & \textbf{0.7029} & \textbf{0.9289} & \textbf{0.9631} \\
+no\_geo & 10 & 0.4863 & 0.6699 & 0.8998 & 0.9341 \\
+no\_motion & 10 & 0.4822 & 0.6135 & 0.9124 & 0.9335 \\
+no\_boundary & 10 & 0.4127 & 0.5318 & 0.9064 & 0.9170 \\
+no\_motion\_no\_boundary & 10 & 0.4143 & 0.5293 & 0.9085 & 0.9193 \\
+\bottomrule
+\end{longtable}
+\normalsize
+
+\section{HyperNeRF Full vs No-Motion-No-Boundary}
+\small
+\begin{longtable}{lrrrrr}
+\toprule
+Scene & Full normal & No-motion-no-boundary normal & Delta & Full greedy & No-motion-no-boundary greedy \\
+\midrule
+\endfirsthead
+\toprule
+Scene & Full normal & No-motion-no-boundary normal & Delta & Full greedy & No-motion-no-boundary greedy \\
+\midrule
+\endhead
+chickchicken & 0.4501 & 0.3113 & -0.1388 & 0.9181 & 0.5555 \\
+cut-lemon1 & 0.5626 & 0.5901 & 0.0275 & 0.7153 & 0.8625 \\
+hand1-dense-v2 & 0.9027 & 0.9027 & 0.0000 & 0.9027 & 0.9027 \\
+slice-banana & 0.3984 & 0.2906 & -0.1079 & 0.7450 & 0.4046 \\
+torchocolate & 0.7000 & 0.2827 & -0.4173 & 0.7000 & 0.2827 \\
+americano & 0.3371 & 0.2471 & -0.0900 & 0.3371 & 0.2471 \\
+espresso & 0.3281 & 0.3593 & 0.0312 & 0.3281 & 0.3593 \\
+keyboard & 0.4680 & 0.3657 & -0.1023 & 0.7539 & 0.4525 \\
+oven-mitts & 0.4731 & 0.4728 & -0.0003 & 0.8578 & 0.9047 \\
+split-cookie & 0.7244 & 0.3210 & -0.4034 & 0.7707 & 0.3210 \\
+\bottomrule
+\end{longtable}
+\normalsize
+
+\section{HyperNeRF Final Method Ablations}
+The final HyperNeRF package also includes long-range/objectness ablations.  These are not the same as the component ablation above: they start from the Leiden resolution 0.03 baseline and add long-range/objectness improvements.  The targeted default is the strongest final setting.
+
+\small
+\begin{longtable}{lrrp{6.5cm}}
+\toprule
+Method & Mean mIoU & Mean mAcc & Notes \\
+\midrule
+\endfirsthead
+\toprule
+Method & Mean mIoU & Mean mAcc & Notes \\
+\midrule
+\endhead
+baseline\_res003 & 0.5418 & 0.9289 & rendered baseline, no long-range \\
+global\_objectness\_longrange & 0.5746 & 0.9308 & rendered one global long-range setting \\
+fast\_sweep\_global\_best & 0.5847 & 0.9358 & image-space sweep estimate \\
+targeted\_default & \textbf{0.6154} & \textbf{0.9441} & rendered fixed per-scene default preset \\
+\bottomrule
+\end{longtable}
+\normalsize
+
+\section{Paper-Facing Takeaway}
+The combined evidence supports using the full affinity as the general default, while reporting the Neu3D coarse-mask exception transparently.  HyperNeRF favors the full motion+boundary variant, and the final HyperNeRF targeted default improves further with long-range/objectness selection.  Neu3D, however, exposes an evaluation mismatch: the single-object mIoU can prefer a simpler affinity that creates a large clean foreground region, even when the full affinity gives a visually richer all-mask partition.
+
+For the paper, report the Neu3D component ablation as a metric result, include a qualitative all-mask figure, and state that Neu3D's coarse masks do not fully measure fine-grained mask-proposal quality.
+
+\section{Source Artifacts}
+\small
+\begin{longtable}{p{15cm}}
+\toprule
+Source file or pattern \\
+\midrule
+\endfirsthead
+\toprule
+Source file or pattern \\
+\midrule
+\endhead
+output/final\_neu3d\_leiden018\_component\_ablations/component\_ablation\_summary.csv \\
+output/final\_neu3d\_leiden018\_component\_ablations/component\_ablation\_per\_scene.csv \\
+output/final\_neu3d\_leiden018\_component\_ablations/runs/*/*/*/miou\_results.json \\
+output/final\_neu3d\_leiden018\_component\_ablations/runs/*/*/*/miou\_results\_greedy.json \\
+output/neu3d\_boundary\_all\_masks\_videos/contact\_sheet.png \\
+output/neu3d\_boundary\_all\_masks\_videos/*\_boundary\_all\_masks\_compare.mp4 \\
+output/final\_hypernerf\_component\_ablation\_logs/component\_ablation\_summary.csv \\
+output/final\_hypernerf\_component\_ablation\_logs/component\_ablation\_per\_scene.csv \\
+output/final\_hypernerf\_1/ablations/method\_summary.csv \\
+output/final\_hypernerf\_1/ablations/per\_scene\_method\_ablation.csv \\
+\bottomrule
+\end{longtable}
+\normalsize
+
+\end{document}

@@ -1,0 +1,20 @@
+{
+  "text_prompt": "banana + banana slicer + hand + cutting board + towel",
+  "text_prompts": [
+    "banana",
+    "banana slicer",
+    "hand",
+    "cutting board",
+    "towel"
+  ],
+  "num_frames": 330,
+  "num_output_frames": 330,
+  "source_rgb_dir": "data/HyperNeRF/interp/slice-banana/rgb/2x",
+  "prompt_metadata_files": [
+    "metadata_banana.json",
+    "metadata_banana_slicer.json",
+    "metadata_hand.json",
+    "metadata_cutting_board.json",
+    "metadata_towel.json"
+  ]
+}

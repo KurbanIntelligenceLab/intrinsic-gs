@@ -1,0 +1,22 @@
+{
+  "text_prompt": "lemon + knife + hand + cutting board + wine bottle + countertop",
+  "text_prompts": [
+    "lemon",
+    "knife",
+    "hand",
+    "cutting board",
+    "wine bottle",
+    "countertop"
+  ],
+  "num_frames": 1661,
+  "num_output_frames": 1661,
+  "source_rgb_dir": "data/HyperNeRF/interp/cut-lemon1/rgb/2x",
+  "prompt_metadata_files": [
+    "metadata_lemon.json",
+    "metadata_knife.json",
+    "metadata_hand.json",
+    "metadata_cutting_board.json",
+    "metadata_wine_bottle.json",
+    "metadata_countertop.json"
+  ]
+}

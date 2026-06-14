@@ -1,0 +1,14 @@
+{
+  "scene": "oven-mitts",
+  "prompt": "oven mitt + hand + arm + shirt + table",
+  "rgb_dir": "data/HyperNeRF/misc/oven-mitts/rgb/2x",
+  "frames": 556,
+  "output_frames": 556,
+  "mean_masks_per_frame": 4.967625899280575,
+  "max_masks_per_frame": 7,
+  "start_session_sec": 30.240449884993723,
+  "close_session_sec": 0.1449479130023974,
+  "save_aggregate_sec": 7.423983468004735,
+  "total_sec": 234.09240504600166,
+  "prompt_count": 5
+}

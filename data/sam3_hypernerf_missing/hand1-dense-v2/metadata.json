@@ -1,0 +1,18 @@
+{
+  "text_prompt": "hand + arm + floor + rug",
+  "text_prompts": [
+    "hand",
+    "arm",
+    "floor",
+    "rug"
+  ],
+  "num_frames": 1734,
+  "num_output_frames": 1734,
+  "source_rgb_dir": "data/HyperNeRF/interp/hand1-dense-v2/rgb/2x",
+  "prompt_metadata_files": [
+    "metadata_hand.json",
+    "metadata_arm.json",
+    "metadata_floor.json",
+    "metadata_rug.json"
+  ]
+}
